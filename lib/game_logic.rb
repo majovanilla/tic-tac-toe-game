@@ -1,4 +1,6 @@
-#classes:
+# frozen_string_literal: true
+
+# classes:
 
 # Game
 # Could include a class variable with games played
@@ -11,9 +13,9 @@
 # Method choice_valid?
 # Method house_empty?
 # Method update_board
-
 # Method winner
 # Optional methods to check rows, columns and diagonals
+
 # Method restart
 
 class Game
@@ -31,36 +33,26 @@ class Game
     @board
   end
 
-  def start_game
-  end
+  def start_game; end
 
   def choice_checker(input)
-    if quit_game?(input)
-      return 'QUITTING GAME'
-    end
+    return 'QUITTING GAME' if quit_game?(input)
 
-    if !choice_valid?(input)
-      return 'INVALID CHOICE'
-    end
+    return 'INVALID CHOICE' unless choice_valid?(input)
 
-    if !house_empty?(input)
-      return 'INVALID HOUSE'
-    end
+    return 'INVALID HOUSE' unless house_empty?(input)
 
-    if choice_valid?(input) && house_empty?(input)
-      return true
-    end
+    return true if choice_valid?(input) && house_empty?(input)
   end
 
   def choice_valid?(input)
-    return !input.nil?
+    !input.nil?
   end
 
   def house_empty?(input)
-    if input.match(/[OX]/)
-      return false
-    end
-    return true
+    return false if input.match(/[OX]/)
+
+    true
   end
 
   def update_board(input, player)
@@ -69,8 +61,38 @@ class Game
   end
 
   def quit_game?(input)
-    return true if input == "quit"
-    return false
+    return true if input == 'quit'
+
+    false
+  end
+
+  def winner(vals)
+    return 'P1' if row_winner(vals, 'O')
+    return 'P2' if row_winner(vals, 'X')
+    return 'P1' if column_winner(vals, 'O')
+    return 'P2' if column_winner(vals, 'X')
+    return 'P1' if diagonal_winner(vals, 'O')
+    return 'P2' if diagonal_winner(vals, 'X')
+  end
+
+  def row_winner(values, choice)
+    if values[0..2] == "#{choice}#{choice}#{choice}" || values[3..5] == "#{choice}#{choice}#{choice}" || values[6..8] == "#{choice}#{choice}#{choice}"
+      true
+    else
+      false
+    end
+  end
+
+  def column_winner(values, choice)
+    return true if values.match(/#{choice}..#{choice}..#{choice}/)
+  end
+
+  def diagonal_winner(values, choice)
+    true if values.match(/#{choice}...#{choice}...#{choice}/) || values.match(/..#{choice}.#{choice}.#{choice}../)
+  end
+
+  def board_values
+    @board.values.join
   end
 end
 
@@ -94,10 +116,14 @@ end
 # @name
 # @player_char
 
-#
+my_game = Game.new
 
-my_game = Game.new()
+sarah = my_game.create_player('Sarah')
 
-sarah = my_game.create_player("Sarah");
+# puts my_game.update_board(:a1, sarah)
+# puts my_game.update_board(:a3, sarah)
+# puts my_game.update_board(:a2, sarah)
 
-puts my_game.update_board(:a1, sarah)
+board = { a1: 'O', a2: "\s", a3: "\s", b1: "\s", b2: 'O', b3: "\s", c1: "\s", c2: "\s", c3: 'O' }.values.join
+puts board
+puts my_game.winner(board)
