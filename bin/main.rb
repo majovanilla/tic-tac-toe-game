@@ -59,6 +59,7 @@ while turns <= 9
   end
   puts "    1  2  3\n a [#{houses[:a1]}][#{houses[:a2]}][#{houses[:a3]}]\n b [#{houses[:b1]}][#{houses[:b2]}][#{houses[:b3]}]\n c [#{houses[:c1]}][#{houses[:c2]}][#{houses[:c3]}]\n"
   turns += 1
-
-  puts "End of game"
+  if turns == 9 
+    puts "End of game"
+  end
 end
