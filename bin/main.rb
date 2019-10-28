@@ -6,8 +6,6 @@ load '../lib/game_logic.rb'
 
 tic_tac = Game.new
 
-houses = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
-
 puts "Game Start!\n"
 
 puts "Input player 1 name:\n"
@@ -27,50 +25,29 @@ puts tic_tac.display_board
 turns = 1
 
 while turns <= 9
-  if turns.odd?
-    puts "#{player1} it's your turn! Choose a house!"
-    player1_choice = gets.chomp.downcase
-    player1_choice = player1_choice.to_sym
+  current_player = tic_tac.current_player(turns)
 
-    if tic_tac.quit_game?(player1_choice)
-      puts 'Quitting game'
-      break
-    end
+  puts "#{current_player.name} it's your turn! Choose a house!"
+  current_choice = gets.chomp.downcase
+  current_choice = current_choice.to_sym
 
-    if tic_tac.choice_checker(player1_choice) == 'INVALID CHOICE'
-      puts ' Please enter a valid input.'
-      puts "\n HINT: combine the letters a,b,c with the numbers 1,2,3 like 'a2'"
-      redo
-    elsif tic_tac.choice_checker(player1_choice) == 'INVALID HOUSE'
-      puts ' Please select an empty house'
-      redo
-		end
-		
-    tic_tac.update_board(player1_choice, p1)
-  else
-    puts "#{player2} it's your turn! Choose a house!"
-    player2_choice = gets.chomp.downcase
-    player2_choice = player2_choice.to_sym
+  if tic_tac.quit_game?(current_choice)
+    puts 'Quitting game'
+    break
+  end
 
-    if tic_tac.quit_game?(player2_choice)
-      puts 'Quitting game'
-      break
-    end
+  if tic_tac.choice_checker(current_choice) == 'INVALID CHOICE'
+    puts ' Please enter a valid input.'
+    puts "\n HINT: combine the letters a,b,c with the numbers 1,2,3 like 'a2'"
+    redo
+  elsif tic_tac.choice_checker(current_choice) == 'INVALID HOUSE'
+    puts ' Please select an empty house'
+    redo
+  end
 
-    if tic_tac.choice_checker(player2_choice) == 'INVALID CHOICE'
-      puts ' Please enter a valid input.'
-      puts "\n HINT: combine the letters a,b,c with the numbers 1,2,3 like 'a2'"
-      redo
-    elsif tic_tac.choice_checker(player2_choice) == 'INVALID HOUSE'
-      puts ' Please select an empty house'
-      redo
-		end
-		
-    tic_tac.update_board(player2_choice, p2)
+  tic_tac.update_board(current_choice, current_player)
 
-	end
-
-	puts tic_tac.display_board
+  puts tic_tac.display_board
 
   turns += 1
 
@@ -83,7 +60,9 @@ while turns <= 9
     break
   elsif tic_tac.winner(values) == 'P2'
     puts "#{player2} wins!"
-    break
+		break
+  elsif tic_tac.winner(values) == 'TIE'
+		puts "It's a tie!"
   end
 end
 
