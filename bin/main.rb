@@ -61,39 +61,58 @@ while turns <= 9
   turns += 1
 
   # Check for victory after the 5th loop
-  if turns > 5
-    puts "turns > 5"
-# [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
-#  0   1   2   3   4   5   6   7   8 
-# houses.values
-    values = houses.values
-    #row conditions
-    if values[0..2].join() == 'OOO'
-      puts "#{player1} wins on the first row!"
-      break
-    end
-    if values[0..2].join() == "XXX"
-      puts "#{player2} wins on the first row!"
-      break
-    end
-    if values[3..5].join() == "OOO"
-      puts "#{player1} wins on the second row!"
-      break
-    end
-    if values[3..5].join() == "XXX"
-      puts "#{player2} wins on the second row!"
-      break
-    end
-    if values[6..8].join() == "OOO"
-      puts "#{player1} wins on the third row!"
-      break
-    end
-    if values[6..8].join() == "XXX"
-      puts "#{player2} wins on the third row!"
-      break
-    end
+  next unless turns > 5
+
+  # [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+  #  0   1   2   3   4   5   6   7   8
+  # houses.values
+  values = houses.values
+  # row conditions
+  if values[0..2].join == 'OOO'
+    puts "#{player1} wins on the first row!"
+    break
+  end
+  if values[0..2].join == 'XXX'
+    puts "#{player2} wins on the first row!"
+    break
+  end
+  if values[3..5].join == 'OOO'
+    puts "#{player1} wins on the second row!"
+    break
+  end
+  if values[3..5].join == 'XXX'
+    puts "#{player2} wins on the second row!"
+    break
+  end
+  if values[6..8].join == 'OOO'
+    puts "#{player1} wins on the third row!"
+    break
+  end
+  if values[6..8].join == 'XXX'
+    puts "#{player2} wins on the third row!"
+    break
+  end
+
+  # columns conditions
+  if values.join.match(/O..O..O/)
+    puts "#{player1} wins with a column match!"
+    break
+  end
+
+  if values.join.match(/X..X..X/)
+    puts "#{player2} wins with a column match!"
+    break
+  end
+
+  # diagonal conditions
+  if values.join.match(/O...O...O/) || values.join.match(/..O.O.O../)
+    puts "#{player1} wins with a diagonal match!"
+    break
+  end
+  if values.join.match(/X...X...X/) || values.join.match(/..X.X.X../)
+    puts "#{player2} wins with a diagonal match!"
+    break
   end
 end
 
-puts "End of game"
-
+puts 'End of game'
