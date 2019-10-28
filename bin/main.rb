@@ -59,7 +59,41 @@ while turns <= 9
   end
   puts "    1  2  3\n a [#{houses[:a1]}][#{houses[:a2]}][#{houses[:a3]}]\n b [#{houses[:b1]}][#{houses[:b2]}][#{houses[:b3]}]\n c [#{houses[:c1]}][#{houses[:c2]}][#{houses[:c3]}]\n"
   turns += 1
-  if turns == 9 
-    puts "End of game"
+
+  # Check for victory after the 5th loop
+  if turns > 5
+    puts "turns > 5"
+# [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
+#  0   1   2   3   4   5   6   7   8 
+# houses.values
+    values = houses.values
+    #row conditions
+    if values[0..2].join() == 'OOO'
+      puts "#{player1} wins on the first row!"
+      break
+    end
+    if values[0..2].join() == "XXX"
+      puts "#{player2} wins on the first row!"
+      break
+    end
+    if values[3..5].join() == "OOO"
+      puts "#{player1} wins on the second row!"
+      break
+    end
+    if values[3..5].join() == "XXX"
+      puts "#{player2} wins on the second row!"
+      break
+    end
+    if values[6..8].join() == "OOO"
+      puts "#{player1} wins on the third row!"
+      break
+    end
+    if values[6..8].join() == "XXX"
+      puts "#{player2} wins on the third row!"
+      break
+    end
   end
 end
+
+puts "End of game"
+
