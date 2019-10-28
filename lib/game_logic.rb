@@ -20,8 +20,10 @@
 
 class Game
   @@game_counter = 0
+  TURNS = 9
   def initialize
     @board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
+    @turn_counter = 1
     @@game_counter += 1
   end
 
@@ -30,14 +32,21 @@ class Game
   end
 
   def display_board
-    @board
+    "    1  2  3\n a [#{@board[:a1]}][#{@board[:a2]}][#{@board[:a3]}]\n b [#{@board[:b1]}][#{@board[:b2]}][#{@board[:b3]}]\n c [#{@board[:c1]}][#{@board[:c2]}][#{@board[:c3]}]\n"
   end
 
-  def start_game; end
+  def start_game
+    while @turn_counter < TURNS
+      puts '???????'
+      @turn_counter += 1
+    end
+  end
+
+  def board_values
+    @board.values.join()
+  end
 
   def choice_checker(input)
-    return 'QUITTING GAME' if quit_game?(input)
-
     return 'INVALID CHOICE' unless choice_valid?(input)
 
     return 'INVALID HOUSE' unless house_empty?(input)
@@ -46,22 +55,23 @@ class Game
   end
 
   def choice_valid?(input)
-    !input.nil?
+    !@board[input].nil?
   end
 
   def house_empty?(input)
-    return false if input.match(/[OX]/)
+    return false if @board[input].match(/[OX]/)
 
     true
   end
 
   def update_board(input, player)
+    puts "\n\n#{player.player_char}\n\n"
     @board[input] = player.player_char
     @board
   end
 
   def quit_game?(input)
-    return true if input == 'quit'
+    return true if input == :quit
 
     false
   end
@@ -101,29 +111,14 @@ class Player
   def initialize(name)
     @name = name
     @@player_number += 1
+    @player_character = @@player_number
   end
 
   def player_char
-    if @@player_number.odd?
+    if @player_character.odd?
       'O'
     else
       'X'
     end
   end
 end
-
-# Player(name = player variable)
-# @name
-# @player_char
-
-my_game = Game.new
-
-sarah = my_game.create_player('Sarah')
-
-# puts my_game.update_board(:a1, sarah)
-# puts my_game.update_board(:a3, sarah)
-# puts my_game.update_board(:a2, sarah)
-
-board = { a1: 'O', a2: "\s", a3: "\s", b1: "\s", b2: 'O', b3: "\s", c1: "\s", c2: "\s", c3: 'O' }.values.join
-puts board
-puts my_game.winner(board)
