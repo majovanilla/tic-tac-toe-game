@@ -69,11 +69,18 @@ while tic_tac.game_loop_on
 
   if tic_tac.winner(values) == 'P1'
     puts "\n\n------------------------\n\n\s\s\s\s\s\s#{p1.name} WINS!\n\n------------------------\n\n"
+    tic_tac.update_scores(p1)
   elsif tic_tac.winner(values) == 'P2'
     puts "\n\n------------------------\n\n\s\s\s\s\s\s#{p2.name} WINS!\n\n------------------------\n\n"
+    tic_tac.update_scores(p2)
   elsif tic_tac.winner(values) == 'TIE'
     puts "\n\n------------------------\n\n\s\s\s\s\s\sTHAT'S A TIE!\n\n------------------------\n\n"
+    tic_tac.update_scores
   end
+  scores = tic_tac.display_scores
+  puts "You have played #{scores[0]} games.\n\n"
+  puts "#{p1.name} has won #{scores[1]} games.\n\n"
+  puts "#{p2.name} has won #{scores[2]} games.\n\n"
   puts 'Do you want to restart the game? (yes/no)'
   option = gets.chomp.downcase
   break unless tic_tac.restart_game?(option)

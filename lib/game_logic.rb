@@ -69,7 +69,6 @@ class Game
     if input == 'yes'
       board_reseter
       turn_reseter
-      @games_played += 1
       true
     elsif input == 'no'
       false
@@ -80,6 +79,15 @@ class Game
     return true if input == :quit
 
     false
+  end
+
+  def update_scores(player = nil)
+    @games_played += 1
+    player&.player_win
+  end
+
+  def display_scores
+    [@games_played, @players[0].games_won, @players[1].games_won]
   end
 
   # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
