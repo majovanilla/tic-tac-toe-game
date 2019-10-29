@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 # frozen_string_literal: true
 
 require_relative('../lib/game_logic.rb')
@@ -72,3 +70,4 @@ while turns <= 9
 end
 
 puts 'End of game'
+
