@@ -106,7 +106,7 @@ Once you run the game, follow the prompts and instructions inside the terminal.
 10. The first player to match a succession of 3 of their assigned symbol (O's or X's) in a row, column or diagonal wins!
 11. If all of the cells are filled with a symbol and no player matched 3 symbols, the game ends in a tie.
 12. If you want to quit the game you can type "quit" instead of chosing a cell.
-13. After the game ends you can start a new one by typing ```bin/main.rb``` again in the terminal.
+13. After each game, you can choose to restart a new one. Type 'yes' or 'no' after the restart prompts. We will keep scores so play nice!!
 
 
 ### Built With
