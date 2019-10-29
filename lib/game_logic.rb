@@ -1,11 +1,24 @@
 # frozen_string_literal: true
 
 class Game
-  TURNS = 9
+  attr_reader :turn_counter
   def initialize
     @board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
     @turn_counter = 1
     @players = []
+    @turns = 9
+  end
+
+  def turn_incrementor
+    @turn_counter += 1
+  end
+
+  def turn_reseter
+    @turn_counter = 1
+  end
+
+  def game_loop_on
+    @turn_counter <= @turns
   end
 
   def create_player(name)
@@ -17,7 +30,7 @@ class Game
   def display_board
     "    1  2  3\n a [#{@board[:a1]}][#{@board[:a2]}][#{@board[:a3]}]
  b [#{@board[:b1]}][#{@board[:b2]}][#{@board[:b3]}]
- c [#{@board[:c1]}][#{@board[:c2]}][#{@board[:c3]}]\n"
+ c [#{@board[:c1]}][#{@board[:c2]}][#{@board[:c3]}]\n\n"
   end
 
   def board_values
@@ -45,6 +58,20 @@ class Game
   def update_board(input, player)
     @board[input] = player.player_char
     @board
+  end
+
+  def board_reseter
+    @board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
+  end
+
+  def restart_game?(input)
+    if input == 'yes'
+      board_reseter
+      turn_reseter
+      true
+    elsif input == 'no'
+      false
+    end
   end
 
   def quit_game?(input)

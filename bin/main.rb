@@ -6,7 +6,7 @@ require_relative('../lib/game_logic.rb')
 
 tic_tac = Game.new
 
-puts "\n\nGame Start!\n\n"
+puts "\n\n------------------------\n\n\s\s\s\s\s\sGAME START!\n\n------------------------\n\n"
 
 puts 'Input player 1 name:'
 player1 = gets.chomp.capitalize
@@ -27,10 +27,8 @@ puts "Here's your Tic-tac-toe game board!\n\n"
 
 puts tic_tac.display_board
 
-turns = 1
-
-while turns <= 9
-  current_player = tic_tac.current_player(turns)
+while tic_tac.game_loop_on
+  current_player = tic_tac.current_player(tic_tac.turn_counter)
 
   puts "#{current_player.name} it's your turn! Choose a cell!"
   current_choice = gets.chomp.downcase
@@ -54,21 +52,31 @@ while turns <= 9
 
   puts tic_tac.display_board
 
-  turns += 1
+  # turns += 1
+  tic_tac.turn_incrementor
 
-  next unless turns > 5
+  next unless tic_tac.turn_counter > 5
 
   values = tic_tac.board_values
 
-  if tic_tac.winner(values) == 'P1'
-    puts "#{player1} wins!"
-    break
-  elsif tic_tac.winner(values) == 'P2'
-    puts "#{player2} wins!"
-    break
-  elsif tic_tac.winner(values) == 'TIE'
-    puts "It's a tie!"
+  if tic_tac.winner(values)
+    if tic_tac.winner(values) == 'P1'
+      puts "\n\n------------------------\n\n\s\s\s\s\s\s#{player1} WINS!\n\n------------------------\n\n"
+    elsif tic_tac.winner(values) == 'P2'
+      puts "\n\n------------------------\n\n\s\s\s\s\s\s#{player2} WINS!\n\n------------------------\n\n"
+    elsif tic_tac.winner(values) == 'TIE'
+      puts "\n\n------------------------\n\n\s\s\s\s\s\sTHAT'S A TIE!\n\n------------------------\n\n"
+    end
+    puts 'Do you want to restart the game? (yes/no)'
+    option = gets.chomp.downcase
+    if tic_tac.restart_game?(option) 
+      puts "\n\n\n------------------------\n\n\s\s\s\s\s\sGAME RESTART!\n\n------------------------\n\n"
+      puts tic_tac.display_board
+    else
+      break
+    end
   end
+
 end
 
-puts 'End of game'
+puts "\n\n========================================================================\n\n------------------------\n\n\s\s\s\s\s\sEND OF THE GAME!\n\n------------------------\n\n========================================================================\n\n"
