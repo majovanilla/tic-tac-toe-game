@@ -1,24 +1,29 @@
+#!/usr/bin/env ruby
+
 # frozen_string_literal: true
 
-# !/usr/bin/env ruby
-
-load '../lib/game_logic.rb'
+require_relative('../lib/game_logic.rb')
 
 tic_tac = Game.new
 
-puts "Game Start!\n"
+puts "\n\nGame Start!\n\n"
 
-puts "Input player 1 name:\n"
+puts 'Input player 1 name:'
 player1 = gets.chomp.capitalize
 p1 = tic_tac.create_player(player1)
 
-puts "Input player 2 name:\n"
+puts 'Input player 2 name:'
 player2 = gets.chomp.capitalize
 p2 = tic_tac.create_player(player2)
 
-puts "Tic-tac-toe is a very fun game!\n#{player1} gets the 'X' and #{player2} the 'O'\nThe first one to connect three X's O's sequence is the Winner!\n"
+puts "INSTRUCTIONS:\n\n"
+puts "Tic-tac-toe is a very fun game!\n#{player1} gets the 'X' and #{player2} the 'O'\n\n"
+puts "The first one to connect three X's O's sequence is the Winner!\n\n"
+puts "If you want to quit the game, type 'quit' after you choose names\n\n"
+puts 'Select a cell by typing the row (letter) followed by the column (number)'
+puts "For example: 'a1'\n\n"
 
-puts "Here's your Tic-tac-toe game board!\n"
+puts "Here's your Tic-tac-toe game board!\n\n"
 
 puts tic_tac.display_board
 
@@ -27,7 +32,7 @@ turns = 1
 while turns <= 9
   current_player = tic_tac.current_player(turns)
 
-  puts "#{current_player.name} it's your turn! Choose a house!"
+  puts "#{current_player.name} it's your turn! Choose a cell!"
   current_choice = gets.chomp.downcase
   current_choice = current_choice.to_sym
 
@@ -41,7 +46,7 @@ while turns <= 9
     puts "\n HINT: combine the letters a,b,c with the numbers 1,2,3 like 'a2'"
     redo
   elsif tic_tac.choice_checker(current_choice) == 'INVALID HOUSE'
-    puts ' Please select an empty house'
+    puts ' Please select an empty cell'
     redo
   end
 
@@ -60,9 +65,9 @@ while turns <= 9
     break
   elsif tic_tac.winner(values) == 'P2'
     puts "#{player2} wins!"
-		break
+    break
   elsif tic_tac.winner(values) == 'TIE'
-		puts "It's a tie!"
+    puts "It's a tie!"
   end
 end
 

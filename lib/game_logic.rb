@@ -1,22 +1,6 @@
+#!/usr/bin/env ruby
+
 # frozen_string_literal: true
-
-# classes:
-
-# Game
-# Could include a class variable with games played
-# Method / call to class to display the board (instead of puts on line 18)
-# Method to instatiate the game / start game method
-# Method to create a new player takes as a parameter the player name variable
-# Method that includes the loop
-# Method for quitting game
-# ---???Method check_choice
-# Method choice_valid?
-# Method house_empty?
-# Method update_board
-# Method winner
-# Optional methods to check rows, columns and diagonals
-
-# Method restart
 
 class Game
   @@game_counter = 0
@@ -25,10 +9,13 @@ class Game
     @board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
     @turn_counter = 1
     @@game_counter += 1
+    @players = []
   end
 
   def create_player(name)
-    Player.new(name)
+    player = Player.new(name)
+    @players << player
+    player
   end
 
   def display_board
@@ -43,7 +30,7 @@ class Game
   end
 
   def board_values
-    @board.values.join()
+    @board.values.join
   end
 
   def choice_checker(input)
@@ -83,6 +70,7 @@ class Game
     return 'P2' if column_winner(vals, 'X')
     return 'P1' if diagonal_winner(vals, 'O')
     return 'P2' if diagonal_winner(vals, 'X')
+    return 'TIE' if check_tie(vals)
   end
 
   def row_winner(values, choice)
@@ -101,12 +89,21 @@ class Game
     true if values.match(/#{choice}...#{choice}...#{choice}/) || values.match(/..#{choice}.#{choice}.#{choice}../)
   end
 
-  def board_values
-    @board.values.join
+  def check_tie(vals)
+    return true if vals.match(/\w{9}/)
+  end
+
+  def current_player(counter)
+    if counter.odd?
+      @players[0]
+    else
+      @players[1]
+    end
   end
 end
 
 class Player
+  attr_reader :name
   @@player_number = 0
   def initialize(name)
     @name = name
