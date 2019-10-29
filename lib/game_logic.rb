@@ -22,13 +22,6 @@ class Game
  c [#{@board[:c1]}][#{@board[:c2]}][#{@board[:c3]}]\n"
   end
 
-  def start_game
-    while @turn_counter < TURNS
-      puts '???????'
-      @turn_counter += 1
-    end
-  end
-
   def board_values
     @board.values.join
   end
@@ -52,7 +45,6 @@ class Game
   end
 
   def update_board(input, player)
-    puts "\n\n#{player.player_char}\n\n"
     @board[input] = player.player_char
     @board
   end
