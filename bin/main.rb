@@ -1,6 +1,6 @@
-# frozen_string_literal: true
+#!/usr/bin/env ruby
 
-# !/usr/bin/env ruby
+# frozen_string_literal: true
 
 houses = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
 
@@ -11,7 +11,12 @@ player1 = gets.chomp.capitalize
 puts "Input player 2 name:\n"
 player2 = gets.chomp.capitalize
 
-puts "Tic-tac-toe is a very fun game!\n#{player1} gets the 'X' and #{player2} the 'O'\nThe first one to connect three X's O's sequence is the Winner!\n"
+puts "INSTRUCTIONS:\n\n"
+puts "Tic-tac-toe is a very fun game!\n#{player1} gets the 'X' and #{player2} the 'O'\n\n"
+puts "The first one to connect three X's O's sequence is the Winner!\n\n"
+puts "If you want to quit the game, type 'quit' after you choose names\n\n"
+puts 'Select a cell by typing the row (letter) followed by the column (number)'
+puts "For example: 'a1'\n\n"
 
 puts "Here's your Tic-tac-toe game board!\n"
 
@@ -21,7 +26,7 @@ turns = 1
 
 while turns <= 9
   if turns.odd?
-    puts "#{player1} it's your turn! Choose a house!"
+    puts "#{player1} it's your turn! Choose a cell!"
     player1_choice = gets.chomp.downcase
     if player1_choice == 'quit'
       puts 'Quitting game'
@@ -34,12 +39,12 @@ while turns <= 9
       redo
     end
     if houses[player1_choice].match(/[OX]/)
-      puts ' Please select an empty house'
+      puts ' Please select an empty cell'
       redo
     end
     houses[player1_choice] = 'O'
   else
-    puts "#{player2} it's your turn! Choose a house!"
+    puts "#{player2} it's your turn! Choose a cell!"
     player2_choice = gets.chomp.downcase
     if player2_choice == 'quit'
       puts 'Quitting game'
@@ -52,7 +57,7 @@ while turns <= 9
       redo
     end
     if houses[player2_choice].match(/[OX]/)
-      puts ' Please select an empty house'
+      puts ' Please select an empty cell'
       redo
     end
     houses[player2_choice] = 'X'
@@ -63,11 +68,7 @@ while turns <= 9
   # Check for victory after the 5th loop
   if turns > 5
     puts "turns > 5"
-# [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]
-#  0   1   2   3   4   5   6   7   8 
-# houses.values
     values = houses.values
-    #row conditions
     if values[0..2].join() == 'OOO'
       puts "#{player1} wins on the first row!"
       break
@@ -95,5 +96,5 @@ while turns <= 9
   end
 end
 
-puts "End of game"
+puts "The game ended in a tie"
 
