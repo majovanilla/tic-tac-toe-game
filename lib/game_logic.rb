@@ -1,36 +1,31 @@
+#!/usr/bin/env ruby
+
 # frozen_string_literal: true
 
 class Game
-  @@game_counter = 0
   TURNS = 9
   def initialize
     @board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
     @turn_counter = 1
-    @current_player = []
-    @@game_counter += 1
+    @players = []
   end
 
   def create_player(name)
     player = Player.new(name)
-    @current_player << player
+    @players << player
+    player
   end
 
   def display_board
-    "    1  2  3\n a [#{@board[:a1]}][#{@board[:a2]}][#{@board[:a3]}]\n b [#{@board[:b1]}][#{@board[:b2]}][#{@board[:b3]}]\n c [#{@board[:c1]}][#{@board[:c2]}][#{@board[:c3]}]\n"
+    "    1  2  3\n a [#{@board[:a1]}][#{@board[:a2]}][#{@board[:a3]}]
+ b [#{@board[:b1]}][#{@board[:b2]}][#{@board[:b3]}]
+ c [#{@board[:c1]}][#{@board[:c2]}][#{@board[:c3]}]\n"
   end
 
   def start_game
     while @turn_counter < TURNS
       puts '???????'
       @turn_counter += 1
-    end
-  end
-
-  def current_player(turn)
-    if turn.odd?
-      @current_player[1]
-    else
-      @current_player[0]
     end
   end
 
@@ -68,18 +63,22 @@ class Game
     false
   end
 
-  def winner(vals, choice)
-    return true if row_winner(vals, choice)
-    return true if column_winner(vals, choice)
-    return true if diagonal_winner(vals, choice)
+  # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
+  def winner(vals)
+    return 'P1' if row_winner(vals, 'O')
+    return 'P2' if row_winner(vals, 'X')
+    return 'P1' if column_winner(vals, 'O')
+    return 'P2' if column_winner(vals, 'X')
+    return 'P1' if diagonal_winner(vals, 'O')
+    return 'P2' if diagonal_winner(vals, 'X')
+    return 'TIE' if check_tie(vals)
   end
-
-  def tie(vals)
-    return true if vals.match(/\w{9}/)
-  end
+  # rubocop:enable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
 
   def row_winner(values, choice)
-    if values[0..2] == "#{choice}#{choice}#{choice}" || values[3..5] == "#{choice}#{choice}#{choice}" || values[6..8] == "#{choice}#{choice}#{choice}"
+    if values[0..2] == "#{choice}#{choice}#{choice}" ||
+       values[3..5] == "#{choice}#{choice}#{choice}" ||
+       values[6..8] == "#{choice}#{choice}#{choice}"
       true
     else
       false
@@ -93,8 +92,21 @@ class Game
   def diagonal_winner(values, choice)
     true if values.match(/#{choice}...#{choice}...#{choice}/) || values.match(/..#{choice}.#{choice}.#{choice}../)
   end
+
+  def check_tie(vals)
+    return true if vals.match(/\w{9}/)
+  end
+
+  def current_player(counter)
+    if counter.odd?
+      @players[0]
+    else
+      @players[1]
+    end
+  end
 end
 
+# rubocop:disable Style/ClassVars
 class Player
   attr_reader :name
   @@player_number = 0
@@ -106,9 +118,10 @@ class Player
 
   def player_char
     if @player_character.odd?
-      'X'
-    else
       'O'
+    else
+      'X'
     end
   end
 end
+# rubocop:enable Style/ClassVars
