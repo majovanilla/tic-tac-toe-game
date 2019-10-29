@@ -25,10 +25,8 @@ puts "Here's your Tic-tac-toe game board!\n\n"
 
 puts tic_tac.display_board
 
-turns = 1
-
-while turns <= 9
-  current_player = tic_tac.current_player(turns)
+while tic_tac.game_loop_on
+  current_player = tic_tac.current_player(tic_tac.turn_counter)
 
   puts "#{current_player.name} it's your turn! Choose a cell!"
   current_choice = gets.chomp.downcase
@@ -52,9 +50,10 @@ while turns <= 9
 
   puts tic_tac.display_board
 
-  turns += 1
+  # turns += 1
+  tic_tac.turn_incrementor
 
-  next unless turns > 5
+  next unless tic_tac.turn_counter > 5
 
   values = tic_tac.board_values
 
