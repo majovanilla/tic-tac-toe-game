@@ -55,13 +55,19 @@ while turns <= 9
 
   values = tic_tac.board_values
 
-  if tic_tac.winner(values) == 'P1'
+  if tic_tac.winner(values, "O")
     puts "#{player1} wins!"
     break
-  elsif tic_tac.winner(values) == 'P2'
+  elsif tic_tac.winner(values, "O")
+    puts "#{player1} wins!"
+    break
+  elsif tic_tac.winner(values, "X")
     puts "#{player2} wins!"
-		break
-  elsif tic_tac.winner(values) == 'TIE'
+    break
+  elsif tic_tac.winner(values, "X")
+    puts "#{player2} wins!"
+    break
+  elsif tic_tac.tie(values)
 		puts "It's a tie!"
   end
 end

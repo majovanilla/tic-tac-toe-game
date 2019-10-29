@@ -1,34 +1,18 @@
 # frozen_string_literal: true
 
-# classes:
-
-# Game
-# Could include a class variable with games played
-# Method / call to class to display the board (instead of puts on line 18)
-# Method to instatiate the game / start game method
-# Method to create a new player takes as a parameter the player name variable
-# Method that includes the loop
-# Method for quitting game
-# ---???Method check_choice
-# Method choice_valid?
-# Method house_empty?
-# Method update_board
-# Method winner
-# Optional methods to check rows, columns and diagonals
-
-# Method restart
-
 class Game
   @@game_counter = 0
   TURNS = 9
   def initialize
     @board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
     @turn_counter = 1
+    @current_player = []
     @@game_counter += 1
   end
 
   def create_player(name)
-    Player.new(name)
+    player = Player.new(name)
+    @current_player << player
   end
 
   def display_board
@@ -42,8 +26,16 @@ class Game
     end
   end
 
+  def current_player(turn)
+    if turn.odd?
+      @current_player[1]
+    else
+      @current_player[0]
+    end
+  end
+
   def board_values
-    @board.values.join()
+    @board.values.join
   end
 
   def choice_checker(input)
@@ -76,13 +68,14 @@ class Game
     false
   end
 
-  def winner(vals)
-    return 'P1' if row_winner(vals, 'O')
-    return 'P2' if row_winner(vals, 'X')
-    return 'P1' if column_winner(vals, 'O')
-    return 'P2' if column_winner(vals, 'X')
-    return 'P1' if diagonal_winner(vals, 'O')
-    return 'P2' if diagonal_winner(vals, 'X')
+  def winner(vals, choice)
+    return true if row_winner(vals, choice)
+    return true if column_winner(vals, choice)
+    return true if diagonal_winner(vals, choice)
+  end
+
+  def tie(vals)
+    return true if vals.match(/\w{9}/)
   end
 
   def row_winner(values, choice)
@@ -100,13 +93,10 @@ class Game
   def diagonal_winner(values, choice)
     true if values.match(/#{choice}...#{choice}...#{choice}/) || values.match(/..#{choice}.#{choice}.#{choice}../)
   end
-
-  def board_values
-    @board.values.join
-  end
 end
 
 class Player
+  attr_reader :name
   @@player_number = 0
   def initialize(name)
     @name = name
@@ -116,9 +106,9 @@ class Player
 
   def player_char
     if @player_character.odd?
-      'O'
-    else
       'X'
+    else
+      'O'
     end
   end
 end
