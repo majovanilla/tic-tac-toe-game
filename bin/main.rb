@@ -2,7 +2,7 @@
 
 # frozen_string_literal: true
 
-houses = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
+cells = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
 
 puts "Game Start!\n"
 
@@ -20,7 +20,7 @@ puts "For example: 'a1'\n\n"
 
 puts "Here's your Tic-tac-toe game board!\n"
 
-puts "    1  2  3\n a [#{houses[:a1]}][#{houses[:a2]}][#{houses[:a3]}]\n b [#{houses[:b1]}][#{houses[:b2]}][#{houses[:b3]}]\n c [#{houses[:c1]}][#{houses[:c2]}][#{houses[:c3]}]\n"
+puts "    1  2  3\n a [#{cells[:a1]}][#{cells[:a2]}][#{cells[:a3]}]\n b [#{cells[:b1]}][#{cells[:b2]}][#{cells[:b3]}]\n c [#{cells[:c1]}][#{cells[:c2]}][#{cells[:c3]}]\n"
 
 turns = 1
 
@@ -33,16 +33,16 @@ while turns <= 9
       break
     end
     player1_choice = player1_choice.to_sym
-    if houses[player1_choice].nil?
+    if cells[player1_choice].nil?
       puts ' Please enter a valid input.'
       puts "\n HINT: combine the letters a,b,c with the numbers 1,2,3 like 'a2'"
       redo
     end
-    if houses[player1_choice].match(/[OX]/)
+    if cells[player1_choice].match(/[OX]/)
       puts ' Please select an empty cell'
       redo
     end
-    houses[player1_choice] = 'O'
+    cells[player1_choice] = :O
   else
     puts "#{player2} it's your turn! Choose a cell!"
     player2_choice = gets.chomp.downcase
@@ -51,24 +51,24 @@ while turns <= 9
       break
     end
     player2_choice = player2_choice.to_sym
-    if houses[player2_choice].nil?
+    if cells[player2_choice].nil?
       puts ' Please enter a valid input.'
       puts "\n HINT: combine the letters a,b,c with the numbers 1,2,3 like 'a2'"
       redo
     end
-    if houses[player2_choice].match(/[OX]/)
+    if cells[player2_choice].match(/[OX]/)
       puts ' Please select an empty cell'
       redo
     end
-    houses[player2_choice] = 'X'
+    cells[player2_choice] = :X
   end
-  puts "    1  2  3\n a [#{houses[:a1]}][#{houses[:a2]}][#{houses[:a3]}]\n b [#{houses[:b1]}][#{houses[:b2]}][#{houses[:b3]}]\n c [#{houses[:c1]}][#{houses[:c2]}][#{houses[:c3]}]\n"
+  puts "    1  2  3\n a [#{cells[:a1]}][#{cells[:a2]}][#{cells[:a3]}]\n b [#{cells[:b1]}][#{cells[:b2]}][#{cells[:b3]}]\n c [#{cells[:c1]}][#{cells[:c2]}][#{cells[:c3]}]\n"
   turns += 1
 
   # Check for victory after the 5th loop
   if turns > 5
     puts "turns > 5"
-    values = houses.values
+    values = cells.values
     if values[0..2].join() == 'OOO'
       puts "#{player1} wins on the first row!"
       break
@@ -105,8 +105,12 @@ while turns <= 9
       puts "#{player1} wins on a diagonal"
       break
     end
+    if values.join().match(/[OX]{9}/)
+      puts "The game ends in a TIE!"
+      break
+    end
   end
 end
 
-puts "The game ended in a tie"
+puts "Game over"
 
