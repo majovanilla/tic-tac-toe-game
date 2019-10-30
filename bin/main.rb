@@ -93,6 +93,18 @@ while turns <= 9
       puts "#{player2} wins on the third row!"
       break
     end
+    if values.join() == "O..O..O"
+      puts "#{player1} wins on a column!"
+      break
+    end
+    if values.join() == "X..X..X"
+      puts "#{player2} wins on a column!"
+      break
+    end
+    if values.join() == "O...O...O" && values.join() == "..O.O.O.."
+      puts "#{player1} wins on a diagonal"
+      break
+    end
   end
 end
 
