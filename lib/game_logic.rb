@@ -7,6 +7,7 @@ class Game
     @turn_counter = 1
     @players = []
     @turns = 9
+    @games_played = 0
   end
 
   def turn_incrementor
@@ -80,6 +81,15 @@ class Game
     false
   end
 
+  def update_scores(player = nil)
+    @games_played += 1
+    player&.player_win
+  end
+
+  def display_scores
+    [@games_played, @players[0].games_won, @players[1].games_won]
+  end
+
   # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
   def winner(vals)
     return 'P1' if row_winner(vals, 'O')
@@ -121,16 +131,23 @@ class Game
       @players[1]
     end
   end
+
+  def valid_name?(input)
+    return false unless input.match(/[\w\d]+/)
+
+    true
+  end
 end
 
 # rubocop:disable Style/ClassVars
 class Player
-  attr_reader :name
+  attr_reader :name, :games_won
   @@player_number = 0
   def initialize(name)
     @name = name
     @@player_number += 1
     @player_character = @@player_number
+    @games_won = 0
   end
 
   def player_char
@@ -139,6 +156,10 @@ class Player
     else
       :X
     end
+  end
+
+  def player_win
+    @games_won += 1
   end
 end
 # rubocop:enable Style/ClassVars

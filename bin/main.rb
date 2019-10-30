@@ -8,16 +8,22 @@ tic_tac = Game.new
 
 puts "\n\n------------------------\n\n\s\s\s\s\s\sGAME START!\n\n------------------------\n\n"
 
-puts 'Input player 1 name:'
-player1 = gets.chomp.capitalize
+player1 = ''
+until tic_tac.valid_name?(player1)
+  puts "Player 1. Choose a name. Use only letters and numbers:\n\n"
+  player1 = gets.chomp.capitalize
+end
 p1 = tic_tac.create_player(player1)
 
-puts 'Input player 2 name:'
-player2 = gets.chomp.capitalize
+player2 = ''
+until tic_tac.valid_name?(player2)
+  puts "\n\nPlayer 2. Choose a name. Use only letters and numbers:\n\n"
+  player2 = gets.chomp.capitalize
+end
 p2 = tic_tac.create_player(player2)
 
 puts "INSTRUCTIONS:\n\n"
-puts "Tic-tac-toe is a very fun game!\n#{player1} gets the 'X' and #{player2} the 'O'\n\n"
+puts "Tic-tac-toe is a very fun game!\n#{p1.name} gets the 'X' and #{p2.name} the 'O'\n\n"
 puts "The first one to connect three X's O's sequence is the Winner!\n\n"
 puts "If you want to quit the game, type 'quit' after you choose names\n\n"
 puts 'Select a cell by typing the row (letter) followed by the column (number)'
@@ -59,24 +65,28 @@ while tic_tac.game_loop_on
 
   values = tic_tac.board_values
 
-  if tic_tac.winner(values)
-    if tic_tac.winner(values) == 'P1'
-      puts "\n\n------------------------\n\n\s\s\s\s\s\s#{player1} WINS!\n\n------------------------\n\n"
-    elsif tic_tac.winner(values) == 'P2'
-      puts "\n\n------------------------\n\n\s\s\s\s\s\s#{player2} WINS!\n\n------------------------\n\n"
-    elsif tic_tac.winner(values) == 'TIE'
-      puts "\n\n------------------------\n\n\s\s\s\s\s\sTHAT'S A TIE!\n\n------------------------\n\n"
-    end
-    puts 'Do you want to restart the game? (yes/no)'
-    option = gets.chomp.downcase
-    if tic_tac.restart_game?(option) 
-      puts "\n\n\n------------------------\n\n\s\s\s\s\s\sGAME RESTART!\n\n------------------------\n\n"
-      puts tic_tac.display_board
-    else
-      break
-    end
-  end
+  next unless tic_tac.winner(values)
 
+  if tic_tac.winner(values) == 'P1'
+    puts "\n\n------------------------\n\n\s\s\s\s\s\s#{p1.name} WINS!\n\n------------------------\n\n"
+    tic_tac.update_scores(p1)
+  elsif tic_tac.winner(values) == 'P2'
+    puts "\n\n------------------------\n\n\s\s\s\s\s\s#{p2.name} WINS!\n\n------------------------\n\n"
+    tic_tac.update_scores(p2)
+  elsif tic_tac.winner(values) == 'TIE'
+    puts "\n\n------------------------\n\n\s\s\s\s\s\sTHAT'S A TIE!\n\n------------------------\n\n"
+    tic_tac.update_scores
+  end
+  scores = tic_tac.display_scores
+  puts "You have played #{scores[0]} games.\n\n"
+  puts "#{p1.name} has won #{scores[1]} games.\n\n"
+  puts "#{p2.name} has won #{scores[2]} games.\n\n"
+  puts 'Do you want to restart the game? (yes/no)'
+  option = gets.chomp.downcase
+  break unless tic_tac.restart_game?(option)
+
+  puts "\n\n\n------------------------\n\n\s\s\s\s\s\sGAME RESTART!\n\n------------------------\n\n"
+  puts tic_tac.display_board
 end
 
 puts "\n\n========================================================================\n\n------------------------\n\n\s\s\s\s\s\sEND OF THE GAME!\n\n------------------------\n\n========================================================================\n\n"
