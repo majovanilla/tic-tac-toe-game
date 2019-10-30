@@ -43,7 +43,7 @@ while tic_tac.game_loop_on
     puts ' Please enter a valid input.'
     puts "\n HINT: combine the letters a,b,c with the numbers 1,2,3 like 'a2'"
     redo
-  elsif tic_tac.choice_checker(current_choice) == 'INVALID HOUSE'
+  elsif tic_tac.choice_checker(current_choice) == 'INVALID CELL'
     puts ' Please select an empty cell'
     redo
   end

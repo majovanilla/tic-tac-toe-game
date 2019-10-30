@@ -40,16 +40,16 @@ class Game
   def choice_checker(input)
     return 'INVALID CHOICE' unless choice_valid?(input)
 
-    return 'INVALID HOUSE' unless house_empty?(input)
+    return 'INVALID CELL' unless cell_empty?(input)
 
-    return true if choice_valid?(input) && house_empty?(input)
+    return true if choice_valid?(input) && cell_empty?(input)
   end
 
   def choice_valid?(input)
     !@board[input].nil?
   end
 
-  def house_empty?(input)
+  def cell_empty?(input)
     return false if @board[input].match(/[OX]/)
 
     true
@@ -135,9 +135,9 @@ class Player
 
   def player_char
     if @player_character.odd?
-      'O'
+      :O
     else
-      'X'
+      :X
     end
   end
 end
