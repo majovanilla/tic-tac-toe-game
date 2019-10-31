@@ -2,8 +2,8 @@
 
 class Game
   attr_reader :turn_counter
-  def initialize
-    @board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
+  def initialize(board)
+    @board = board
     @turn_counter = 1
     @players = []
     @turns = 9
@@ -31,8 +31,9 @@ class Game
 
   def restart_game?(input)
     if input == 'yes'
-      board_reseter
+      @board.board_reseter
       turn_reseter
+      @win = false
       true
     elsif input == 'no'
       false
@@ -54,17 +55,17 @@ class Game
     [@games_played, @players[0].games_won, @players[1].games_won]
   end
 
-  # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
-  def winner(vals)
-    return 'P1' if row_winner(vals, 'O')
-    return 'P2' if row_winner(vals, 'X')
-    return 'P1' if column_winner(vals, 'O')
-    return 'P2' if column_winner(vals, 'X')
-    return 'P1' if diagonal_winner(vals, 'O')
-    return 'P2' if diagonal_winner(vals, 'X')
-    return 'TIE' if check_tie(vals)
+  def winner(vals, player_number)
+    if row_winner(vals, @players[player_number].player_char) ||
+       column_winner(vals, @players[player_number].player_char) ||
+       diagonal_winner(vals, @players[player_number].player_char)
+      @win = true
+      update_scores(@players[player_number])
+      @players[player_number].name
+    elsif check_tie(vals) && !@win
+      'TIE'
+    end
   end
-  # rubocop:enable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
 
   def row_winner(values, choice)
     if values[0..2] == "#{choice}#{choice}#{choice}" ||
@@ -103,18 +104,7 @@ class Game
   end
 end
 
-# rubocop:disable Style/ClassVars
-class Player
-  attr_reader :name, :games_won
-  @@player_number = 0
-  def initialize(name)
-    @name = name
-    @@player_number += 1
-    @player_character = @@player_number
-    @games_won = 0
-  end
-
-  class Board
+class Board
   def initialize
     @board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
   end
@@ -156,6 +146,17 @@ class Player
     @board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
   end
 end
+
+# rubocop:disable Style/ClassVars
+class Player
+  attr_reader :name, :games_won
+  @@player_number = 0
+  def initialize(name)
+    @name = name
+    @@player_number += 1
+    @player_character = @@player_number
+    @games_won = 0
+  end
 
   def player_char
     if @player_character.odd?
