@@ -2,28 +2,39 @@
 
 require_relative('../lib/game_logic.rb')
 
-tic_tac = Game.new
+board = Board.new
+tic_tac = Game.new(board)
+
+def get_player_name(game, player_num)
+  if player_num == 1
+    puts 'Input player 1 name:'
+  else player_num == 2
+    puts 'Input player 2 name:'
+  end
+  player = gets.chomp.capitalize
+  return game.create_player(player)
+end
+
+def display_instructions(player1, player2) 
+  puts "INSTRUCTIONS:\n\n"
+  puts "Tic-tac-toe is a very fun game!\n#{player1.name} gets the 'X' and #{player2.name} the 'O'\n\n"
+  puts "The first one to connect three X's O's sequence is the Winner!\n\n"
+  puts "If you want to quit the game, type 'quit' after you choose names\n\n"
+  puts 'Select a cell by typing the row (letter) followed by the column (number)'
+  puts "For example: 'a1'\n\n"
+  
+  puts "Here's your Tic-tac-toe game board!\n\n"
+end
 
 puts "\n\nGame Start!\n\n"
 
-puts 'Input player 1 name:'
-player1 = gets.chomp.capitalize
-p1 = tic_tac.create_player(player1)
+p1 = get_player_name(tic_tac, 1)
 
-puts 'Input player 2 name:'
-player2 = gets.chomp.capitalize
-p2 = tic_tac.create_player(player2)
+p2 = get_player_name(tic_tac, 2)
 
-puts "INSTRUCTIONS:\n\n"
-puts "Tic-tac-toe is a very fun game!\n#{player1} gets the 'X' and #{player2} the 'O'\n\n"
-puts "The first one to connect three X's O's sequence is the Winner!\n\n"
-puts "If you want to quit the game, type 'quit' after you choose names\n\n"
-puts 'Select a cell by typing the row (letter) followed by the column (number)'
-puts "For example: 'a1'\n\n"
+display_instructions(p1, p2)
 
-puts "Here's your Tic-tac-toe game board!\n\n"
-
-puts tic_tac.display_board
+puts board.display_board
 
 while tic_tac.game_loop_on
   current_player = tic_tac.current_player(tic_tac.turn_counter)
@@ -37,31 +48,31 @@ while tic_tac.game_loop_on
     break
   end
 
-  if tic_tac.choice_checker(current_choice) == 'INVALID CHOICE'
+  if board.choice_checker(current_choice) == 'INVALID CHOICE'
     puts ' Please enter a valid input.'
     puts "\n HINT: combine the letters a,b,c with the numbers 1,2,3 like 'a2'"
     redo
-  elsif tic_tac.choice_checker(current_choice) == 'INVALID CELL'
+  elsif board.choice_checker(current_choice) == 'INVALID CELL'
     puts ' Please select an empty cell'
     redo
   end
 
-  tic_tac.update_board(current_choice, current_player)
+  board.update_board(current_choice, current_player)
 
-  puts tic_tac.display_board
+  puts board.display_board
 
   # turns += 1
   tic_tac.turn_incrementor
 
   next unless tic_tac.turn_counter > 5
 
-  values = tic_tac.board_values
+  values = board.board_values
 
   if tic_tac.winner(values) == 'P1'
-    puts "#{player1} wins!"
+    puts "#{p1.name} wins!"
     break
   elsif tic_tac.winner(values) == 'P2'
-    puts "#{player2} wins!"
+    puts "#{p1.name} wins!"
     break
   elsif tic_tac.winner(values) == 'TIE'
     puts "It's a tie!"
