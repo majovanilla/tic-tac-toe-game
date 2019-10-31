@@ -7,6 +7,7 @@ class Game
     @turn_counter = 1
     @players = []
     @turns = 9
+    @win = false
   end
 
   def turn_incrementor
@@ -47,17 +48,16 @@ class Game
     false
   end
 
-  # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
   def winner(vals, player_number)
-    return @players[player_number].name if row_winner(vals, @players[player_number].player_char)
-    #return 'P2' if row_winner(vals, @players[1].player_char)
-    return @players[player_number].name if column_winner(vals, @players[player_number].player_char)
-    #return 'P2' if column_winner(vals, @players[1].player_char)
-    return @players[player_number].name if diagonal_winner(vals, @players[player_number].player_char)
-    #return 'P2' if diagonal_winner(vals, @players[1].player_char)
-    return 'TIE' if check_tie(vals)
+    if row_winner(vals, @players[player_number].player_char) ||
+       column_winner(vals, @players[player_number].player_char) ||
+       diagonal_winner(vals, @players[player_number].player_char)
+      @win = true
+      @players[player_number].name
+    elsif check_tie(vals) && !@win
+      'TIE'
+    end
   end
-  # rubocop:enable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
 
   def row_winner(values, choice)
     if values[0..2] == "#{choice}#{choice}#{choice}" ||

@@ -25,10 +25,30 @@ def display_instructions(player1, player2)
   puts "Here's your Tic-tac-toe game board!\n\n"
 end
 
+def invalid_choice?(current_choice, board)
+  input = board.choice_checker(current_choice) 
+  return false if input.class == TrueClass
+
+  if input == 'INVALID CHOICE'
+    puts "\n\n Please enter a valid input."
+    puts "\n HINT: combine the letters a,b,c with the numbers 1,2,3 like 'a2'"      
+  elsif input == 'INVALID CELL'
+    puts "\n\n Please select an empty cell"
+  end
+  true
+end
+
 def get_player_choice(player)
   puts "#{player.name} it's your turn! Choose a cell!"
   current_choice = gets.chomp.downcase
   current_choice.to_sym
+end
+
+def turn_result(result)
+  return false if result.empty?
+
+  puts "#{result} wins!"
+  true
 end
 
 puts "\n\nGame Start!\n\n"
@@ -45,47 +65,25 @@ while tic_tac.game_loop_on
   current_player = tic_tac.current_player(tic_tac.turn_counter)
   current_choice = get_player_choice(current_player)
 
-  if tic_tac.quit_game?(current_choice)
-    puts 'Quitting game'
-    break
-  end
+  break puts 'Quitting game' if tic_tac.quit_game?(current_choice)
 
-  if board.choice_checker(current_choice) == 'INVALID CHOICE'
-    puts ' Please enter a valid input.'
-    puts "\n HINT: combine the letters a,b,c with the numbers 1,2,3 like 'a2'"
-    redo
-  elsif board.choice_checker(current_choice) == 'INVALID CELL'
-    puts ' Please select an empty cell'
-    redo
-  end
+  redo if invalid_choice?(current_choice, board)
 
   board.update_board(current_choice, current_player)
 
   puts board.display_board
 
-  # turns += 1
   tic_tac.turn_incrementor
 
   next unless tic_tac.turn_counter > 5
 
   values = board.board_values
 
-  result1 = tic_tac.winner(values, 0)
-  result2 = tic_tac.winner(values, 1)
+  result_final = "#{tic_tac.winner(values, 0)}#{tic_tac.winner(values, 1)}"
 
-  return puts "It's a tie!" if result1 == 'TIE' || result2 == 'TIE'
+  return puts "It's a tie!" if result_final == 'TIETIE'
 
-  puts "The winner is #{result1}#{result2}"
-
-  # if tic_tac.winner(values) == 'P1'
-  #   puts "#{p1.name} wins!"
-  #   break
-  # elsif tic_tac.winner(values) == 'P2'
-  #   puts "#{p1.name} wins!"
-  #   break
-  # elsif tic_tac.winner(values) == 'TIE'
-  #   puts "It's a tie!"
-  # end
+  break if turn_result(result_final)
 end
 
 puts 'End of game'
