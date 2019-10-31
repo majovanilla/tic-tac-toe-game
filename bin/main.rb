@@ -20,7 +20,9 @@ puts "For example: 'a1'\n\n"
 
 puts "Here's your Tic-tac-toe game board!\n"
 
-puts "    1  2  3\n a [#{cells[:a1]}][#{cells[:a2]}][#{cells[:a3]}]\n b [#{cells[:b1]}][#{cells[:b2]}][#{cells[:b3]}]\n c [#{cells[:c1]}][#{cells[:c2]}][#{cells[:c3]}]\n"
+puts "    1  2  3\n a [#{cells[:a1]}][#{cells[:a2]}][#{cells[:a3]}] 
+ b [#{cells[:b1]}][#{cells[:b2]}][#{cells[:b3]}]
+ c [#{cells[:c1]}][#{cells[:c2]}][#{cells[:c3]}]\n"
 
 turns = 1
 
@@ -62,55 +64,59 @@ while turns <= 9
     end
     cells[player2_choice] = :X
   end
-  puts "    1  2  3\n a [#{cells[:a1]}][#{cells[:a2]}][#{cells[:a3]}]\n b [#{cells[:b1]}][#{cells[:b2]}][#{cells[:b3]}]\n c [#{cells[:c1]}][#{cells[:c2]}][#{cells[:c3]}]\n"
+  puts "    1  2  3\n a [#{cells[:a1]}][#{cells[:a2]}][#{cells[:a3]}]
+ b [#{cells[:b1]}][#{cells[:b2]}][#{cells[:b3]}]
+ c [#{cells[:c1]}][#{cells[:c2]}][#{cells[:c3]}]\n"
   turns += 1
 
   # Check for victory after the 5th loop
-  if turns > 5
-    puts "turns > 5"
-    values = cells.values
-    if values[0..2].join() == 'OOO'
-      puts "#{player1} wins on the first row!"
-      break
-    end
-    if values[0..2].join() == "XXX"
-      puts "#{player2} wins on the first row!"
-      break
-    end
-    if values[3..5].join() == "OOO"
-      puts "#{player1} wins on the second row!"
-      break
-    end
-    if values[3..5].join() == "XXX"
-      puts "#{player2} wins on the second row!"
-      break
-    end
-    if values[6..8].join() == "OOO"
-      puts "#{player1} wins on the third row!"
-      break
-    end
-    if values[6..8].join() == "XXX"
-      puts "#{player2} wins on the third row!"
-      break
-    end
-    if values.join() == "O..O..O"
-      puts "#{player1} wins on a column!"
-      break
-    end
-    if values.join() == "X..X..X"
-      puts "#{player2} wins on a column!"
-      break
-    end
-    if values.join() == "O...O...O" && values.join() == "..O.O.O.."
-      puts "#{player1} wins on a diagonal"
-      break
-    end
-    if values.join().match(/[OX]{9}/)
-      puts "The game ends in a TIE!"
-      break
-    end
+  next if turns <= 5
+
+  values = cells.values
+  if values[0..2].join == 'OOO'
+    puts "#{player1} wins on the first row!"
+    break
+  end
+  if values[0..2].join == 'XXX'
+    puts "#{player2} wins on the first row!"
+    break
+  end
+  if values[3..5].join == 'OOO'
+    puts "#{player1} wins on the second row!"
+    break
+  end
+  if values[3..5].join == 'XXX'
+    puts "#{player2} wins on the second row!"
+    break
+  end
+  if values[6..8].join == 'OOO'
+    puts "#{player1} wins on the third row!"
+    break
+  end
+  if values[6..8].join == 'XXX'
+    puts "#{player2} wins on the third row!"
+    break
+  end
+  if values.join.match(/O..O..O/)
+    puts "#{player1} wins on a column!"
+    break
+  end
+  if values.join.match(/X..X..X/)
+    puts "#{player2} wins on a column!"
+    break
+  end
+  if values.join.match(/O...O...O/) || values.join.match(/..O.O.O../)
+    puts "#{player1} wins on a diagonal"
+    break
+  end
+  if values.join.match(/X...X...X/) || values.join.match(/..X.X.X../)
+    puts "#{player2} wins on a diagonal"
+    break
+  end
+  if values.join.match(/[OX]{9}/)
+    puts 'The game ends in a TIE!'
+    break
   end
 end
 
-puts "Game over"
-
+puts 'Game over'
