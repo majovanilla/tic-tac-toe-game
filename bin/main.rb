@@ -8,11 +8,11 @@ tic_tac = Game.new(board)
 def get_player_name(game, player_num)
   if player_num == 1
     puts 'Input player 1 name:'
-  else player_num == 2
+  elsif player_num == 2
     puts 'Input player 2 name:'
   end
   player = gets.chomp.capitalize
-  return game.create_player(player)
+  game.create_player(player)
 end
 
 def display_instructions(player1, player2) 
@@ -22,8 +22,13 @@ def display_instructions(player1, player2)
   puts "If you want to quit the game, type 'quit' after you choose names\n\n"
   puts 'Select a cell by typing the row (letter) followed by the column (number)'
   puts "For example: 'a1'\n\n"
-  
   puts "Here's your Tic-tac-toe game board!\n\n"
+end
+
+def get_player_choice(player)
+  puts "#{player.name} it's your turn! Choose a cell!"
+  current_choice = gets.chomp.downcase
+  current_choice.to_sym
 end
 
 puts "\n\nGame Start!\n\n"
@@ -38,10 +43,7 @@ puts board.display_board
 
 while tic_tac.game_loop_on
   current_player = tic_tac.current_player(tic_tac.turn_counter)
-
-  puts "#{current_player.name} it's your turn! Choose a cell!"
-  current_choice = gets.chomp.downcase
-  current_choice = current_choice.to_sym
+  current_choice = get_player_choice(current_player)
 
   if tic_tac.quit_game?(current_choice)
     puts 'Quitting game'
@@ -68,16 +70,22 @@ while tic_tac.game_loop_on
 
   values = board.board_values
 
-  if tic_tac.winner(values) == 'P1'
-    puts "#{p1.name} wins!"
-    break
-  elsif tic_tac.winner(values) == 'P2'
-    puts "#{p1.name} wins!"
-    break
-  elsif tic_tac.winner(values) == 'TIE'
-    puts "It's a tie!"
-  end
+  result1 = tic_tac.winner(values, 0)
+  result2 = tic_tac.winner(values, 1)
+
+  return puts "It's a tie!" if result1 == 'TIE' || result2 == 'TIE'
+
+  puts "The winner is #{result1}#{result2}"
+
+  # if tic_tac.winner(values) == 'P1'
+  #   puts "#{p1.name} wins!"
+  #   break
+  # elsif tic_tac.winner(values) == 'P2'
+  #   puts "#{p1.name} wins!"
+  #   break
+  # elsif tic_tac.winner(values) == 'TIE'
+  #   puts "It's a tie!"
+  # end
 end
 
 puts 'End of game'
-

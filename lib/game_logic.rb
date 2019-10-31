@@ -48,13 +48,13 @@ class Game
   end
 
   # rubocop:disable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
-  def winner(vals)
-    return 'P1' if row_winner(vals, @players[0].player_char)
-    return 'P2' if row_winner(vals, @players[1].player_char)
-    return 'P1' if column_winner(vals, @players[0].player_char)
-    return 'P2' if column_winner(vals, @players[1].player_char)
-    return 'P1' if diagonal_winner(vals, @players[0].player_char)
-    return 'P2' if diagonal_winner(vals, @players[1].player_char)
+  def winner(vals, player_number)
+    return @players[player_number].name if row_winner(vals, @players[player_number].player_char)
+    #return 'P2' if row_winner(vals, @players[1].player_char)
+    return @players[player_number].name if column_winner(vals, @players[player_number].player_char)
+    #return 'P2' if column_winner(vals, @players[1].player_char)
+    return @players[player_number].name if diagonal_winner(vals, @players[player_number].player_char)
+    #return 'P2' if diagonal_winner(vals, @players[1].player_char)
     return 'TIE' if check_tie(vals)
   end
   # rubocop:enable Metrics/PerceivedComplexity,Metrics/CyclomaticComplexity
