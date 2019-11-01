@@ -1,4 +1,4 @@
-# spec/main_rspec.rb
+# spec/game_logic_rspec.rb
 
 # frozen_string_literal: true
 
@@ -30,7 +30,6 @@ mock_board = Board.new
 mock_game = Game.new(mock_board)
 player1 = mock_game.create_player('Player1')
 player2 = mock_game.create_player('Player2')
-players_array = [player1, player2]
 
 RSpec.describe Game do
   describe 'winner' do
@@ -127,7 +126,7 @@ RSpec.describe Game do
     expect(mock_game.current_player(even)).to equal(player2)
   end
 
-  context 'Of when a game ends and the scores are updated' do
+  context 'Of when a game ends and the scores are updated' do # rubocop:disable Metrics/BlockLength
     it 'Updates games_played variable when the game ends' do
       none_games = mock_game.display_scores[0]
       mock_game.update_scores
@@ -135,23 +134,85 @@ RSpec.describe Game do
     end
 
     it 'Updates games_won variable of P1 when a game is won by P1' do
+      initial_games = player1.games_won
+      mock_game.update_scores(player1)
+      expect(player1.games_won).to eql(initial_games + 1)
     end
 
     it 'Updates games_won variable of P2 when a game is won by P2' do
+      initial_games = player2.games_won
+      mock_game.update_scores(player2)
+      expect(player2.games_won).to eql(initial_games + 1)
+    end
+
+    it 'Does not update games_won variable of P2 when a game is won by P1' do
+      initial_games = player2.games_won
+      mock_game.update_scores(player1)
+      expect(player2.games_won).to eql(initial_games)
+    end
+
+    it 'Does not update games_won variable of P1 when a game is won by P2' do
+      initial_games = player1.games_won
+      mock_game.update_scores(player2)
+      expect(player1.games_won).to eql(initial_games)
     end
 
     it 'The variable games_won does not update (for neither player) when a game is a tie' do
+      none_games = mock_game.display_scores[1, 2]
+      mock_game.update_scores
+      expect(mock_game.display_scores[1, 2]).to eql(none_games)
     end
   end
-  # update_scores
-  # restart_game
+
+  it 'Should set the turn_counter instance variable to 1' do
+    mock_game.turn_reseter
+    expect(mock_game.turn_counter).to eql(1)
+  end
 end
 
 RSpec.describe Player do
-  # Test correct creation of instance of Player with name
+  player3 = mock_game.create_player('Player3')
+  it 'Should created a new instance of a Player' do
+    expect(player3).to be_kind_of(Player)
+  end
+
+  it 'Should initialize its instances with an accessible name variable' do
+    expect(player3.name).to be
+  end
+
+  it 'Should initialize its instances with an accessible games_won variable' do
+    expect(player3.games_won).to be
+  end
 end
 
 RSpec.describe Board do
-  # Test choice checker
-  # Test update board and board reseter
+  context 'For the choice checker return values' do
+    it 'Should return the string \'ÍNVALID CHOICE\' if the input is not a valid cell in the board' do
+      input = :a5
+      expect(mock_board.choice_checker(input)).to eql('INVALID CHOICE')
+    end
+
+    it 'Should return the string \'INVALID CELL\' if the input is points to a taken cell in the board' do
+      mock_board.update_board(:b2, player1)
+      input = :b2
+      expect(mock_board.choice_checker(input)).to eql('INVALID CELL')
+    end
+
+    it 'Should return the string \'INVALID CELL\' if the input is points to a taken cell in the board' do
+      mock_board.update_board(:b1, player1)
+      mock_board.update_board(:a2, player1)
+      mock_board.update_board(:b3, player1)
+      mock_board.update_board(:a3, player1)
+      mock_board.update_board(:c1, player1)
+      mock_board.update_board(:c2, player1)
+      mock_board.update_board(:c3, player1)
+      input = :a1
+      expect(mock_board.choice_checker(input)).to eql(true)
+    end
+
+    it 'Should reset the Board instance variable to its original value, with empty cells' do
+      empty_board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
+      expect(mock_board.board_reseter).to eql(empty_board)
+    end
+  end
 end
