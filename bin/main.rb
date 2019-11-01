@@ -107,7 +107,7 @@ while tic_tac.game_loop_on
 
   sleep 0.5
   result_final = "#{tic_tac.winner(values, 0)}#{tic_tac.winner(values, 1)}"
-  
+
   if result_final == 'TIETIE'
     tic_tac.update_scores
     puts "\n\n------------------------\n\n\s\s\s\s\s\sTHAT'S A TIE!\n\n------------------------\n\n" 
