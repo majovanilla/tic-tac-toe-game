@@ -147,6 +147,49 @@ class Board
   end
 end
 
+class Board
+  def initialize
+    @board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
+  end
+
+  def display_board
+    "    1  2  3\n a [#{@board[:a1]}][#{@board[:a2]}][#{@board[:a3]}]
+ b [#{@board[:b1]}][#{@board[:b2]}][#{@board[:b3]}]
+ c [#{@board[:c1]}][#{@board[:c2]}][#{@board[:c3]}]\n\n"
+  end
+
+  def board_values
+    @board.values.join
+  end
+
+  def choice_checker(input)
+    return 'INVALID CHOICE' unless choice_valid?(input)
+
+    return 'INVALID CELL' unless cell_empty?(input)
+
+    return true if choice_valid?(input) && cell_empty?(input)
+  end
+
+  def choice_valid?(input)
+    !@board[input].nil?
+  end
+
+  def cell_empty?(input)
+    return false if @board[input].match(/[OX]/)
+
+    true
+  end
+
+  def update_board(input, player)
+    @board[input] = player.player_char
+    @board
+  end
+
+  def board_reseter
+    @board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
+  end
+end
+
 # rubocop:disable Style/ClassVars
 class Player
   attr_reader :name, :games_won
