@@ -24,10 +24,13 @@ vals_last_winner_x = 'XOOXXXOOX'
 vals_tie = 'XOXXOOOXO'
 player1_num = 0
 player2_num = 1
+even = 0
+odd = 1
 mock_board = Board.new
 mock_game = Game.new(mock_board)
 player1 = mock_game.create_player('Player1')
 player2 = mock_game.create_player('Player2')
+players_array = [player1, player2]
 
 RSpec.describe Game do
   describe 'winner' do
@@ -116,13 +119,36 @@ RSpec.describe Game do
     end
   end
 
-  #current_player
-  #update_scores
-  #restart_game
+  it 'Returns the player object of P1 if counter is odd' do
+    expect(mock_game.current_player(odd)).to equal(player1)
+  end
+
+  it 'Returns the player object of P2 if counter is even' do
+    expect(mock_game.current_player(even)).to equal(player2)
+  end
+
+  context 'Of when a game ends and the scores are updated' do
+    it 'Updates games_played variable when the game ends' do
+      none_games = mock_game.display_scores[0]
+      mock_game.update_scores
+      expect(mock_game.display_scores[0]).to eql(none_games + 1)
+    end
+
+    it 'Updates games_won variable of P1 when a game is won by P1' do
+    end
+
+    it 'Updates games_won variable of P2 when a game is won by P2' do
+    end
+
+    it 'The variable games_won does not update (for neither player) when a game is a tie' do
+    end
+  end
+  # update_scores
+  # restart_game
 end
 
 RSpec.describe Player do
-  # Test correct creation of instance of Player with name 
+  # Test correct creation of instance of Player with name
 end
 
 RSpec.describe Board do

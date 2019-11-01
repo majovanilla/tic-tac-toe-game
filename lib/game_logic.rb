@@ -63,6 +63,7 @@ class Game
       update_scores(@players[player_number])
       @players[player_number].name
     elsif check_tie(vals) && !@win
+      update_scores
       'TIE'
     end
   end

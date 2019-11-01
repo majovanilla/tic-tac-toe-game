@@ -109,7 +109,7 @@ while tic_tac.game_loop_on
   result_final = "#{tic_tac.winner(values, 0)}#{tic_tac.winner(values, 1)}"
 
   if result_final == 'TIETIE'
-    tic_tac.update_scores
+    #tic_tac.update_scores
     puts "\n\n------------------------\n\n\s\s\s\s\s\sTHAT'S A TIE!\n\n------------------------\n\n" 
   elsif !turn_result(result_final)
     next
