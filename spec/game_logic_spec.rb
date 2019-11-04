@@ -175,8 +175,6 @@ RSpec.describe Game do
       expect(mock_game.winner('FAGVGAHJAAJA', player1_num)).to be('TIE')
     end
 
-
-
     context 'For games in which the player wins in a row' do
       it 'Player 2 wins in the first row' do
         expect(mock_game.winner(vals_row1_winner_x, player2_num)).to eql(player2.name)
