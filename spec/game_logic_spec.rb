@@ -57,6 +57,51 @@ RSpec.describe Game do
     end
   end
 
+  describe 'create_player' do
+    playerx = mock_game.create_player('PlayerX')
+    it 'Should created a new instance of a Player' do
+      expect(playerx).to be_kind_of(Player)
+    end
+
+    it 'Should raise an error when calling create_player method without a parameter' do
+      expect { mock_game.create_player }.to raise_error(ArgumentError)
+    end
+
+    it 'Should raise an error when calling create_player method with more than one parameter' do
+      expect { mock_game.create_player('hello', 'again') }.to raise_error(ArgumentError)
+    end
+
+    it 'Should accept any type as an argument' do
+      expect(mock_game.create_player(nil)).to be_kind_of(Player)
+    end
+  end
+  
+  describe 'display_scores' do
+    it 'should give an array' do
+      expect(mock_game.display_scores).to be_kind_of(Array)
+    end
+
+    it 'should give an array with three items' do
+      expect(mock_game.display_scores.size).to equal(3)
+    end
+
+    it 'should contain only integers' do
+      expect(mock_game.display_scores.all?(Integer)).to equal(true)
+    end
+
+    it 'should return in index 0 the sum of index 1 and index 2' do
+      scores = mock_game.display_scores
+      sum = scores[1] + scores[2]
+      expect(scores[0]).to equal(sum)
+    end
+
+    it 'Updates games_played variable when the game ends' do
+      none_games = mock_game.display_scores[0]
+      mock_game.update_scores
+      expect(mock_game.display_scores[0]).to eql(none_games + 1)
+    end
+  end
+
   describe 'restart_game?' do
     it 'Should return true if its given parameter is the string "yes"' do
       expect(mock_game.restart_game?('yes')).to eql(true)
@@ -79,7 +124,58 @@ RSpec.describe Game do
     end
   end
 
+  describe 'quit_game?' do
+    it 'should return true if input given is the symbol quit' do
+      expect(mock_game.quit_game?(:quit)).to be(true)
+    end
+
+    it 'should return false if input given is not the symbol quit' do
+      expect(mock_game.quit_game?('quit')).to be(false)
+    end
+
+    it 'should raise an error no parameters are given' do
+      expect { mock_game.quit_game? }.to raise_error(ArgumentError)
+    end
+
+    it 'should raise an error when more than one parameter is given' do
+      expect { mock_game.quit_game?('something', 'else') }.to raise_error(ArgumentError)
+    end
+  end
+
   describe 'winner' do
+
+    it 'should raise an error when no input is given' do
+      expect { mock_game.winner }.to raise_error(ArgumentError)
+    end
+
+    it 'Should raise an Argument error if the wrong number of parameters are given' do
+      expect { mock_game.winner('true') }.to raise_error(ArgumentError)
+    end
+
+    it 'Should raise an Argument error if the second parameter is no 0 or 1' do
+      expect { mock_game.winner(vals_row1_winner_x, 5) }.to raise_error(NoMethodError)
+    end
+
+    it 'Should raise an Argument error if the second parameter is not an integer' do
+      expect { mock_game.winner(vals_row1_winner_x, '1') }.to raise_error(TypeError)
+    end
+
+    it 'Should return nil if the first parameter is a string with less than 9 characters' do
+      expect(mock_game.winner('FAGVA', player1_num)).to be(nil)
+    end
+
+    it 'Should return nil if the first parameter is a string with less than 9 characters' do
+      expect(mock_game.winner('FAGVA', player1_num)).to be(nil)
+    end
+
+    it 'Should return \'TIE\' if the first parameter is a string with more than 9 characters' do
+      expect(mock_game.winner('FAGVGAHJAAJA', player1_num)).to be('TIE')
+    end
+
+    it 'Should raise a type error if the first parameter is not a string' do
+      expect { mock_game.winner(545_345, player1_num) }.to raise_error(TypeError)
+    end
+
     context 'For games in which the player wins in a row' do
       it 'Player 2 wins in the first row' do
         expect(mock_game.winner(vals_row1_winner_x, player2_num)).to eql(player2.name)
@@ -165,21 +261,17 @@ RSpec.describe Game do
     end
   end
 
-  it 'Returns the player object of P1 if counter is odd' do
-    expect(mock_game.current_player(odd)).to equal(player1)
-  end
+  describe 'current_player' do
+    it 'Returns the player object of P1 if counter is odd' do
+      expect(mock_game.current_player(odd)).to equal(player1)
+    end
 
-  it 'Returns the player object of P2 if counter is even' do
-    expect(mock_game.current_player(even)).to equal(player2)
+    it 'Returns the player object of P2 if counter is even' do
+      expect(mock_game.current_player(even)).to equal(player2)
+    end
   end
 
   context 'Of when a game ends and the scores are updated' do # rubocop:disable Metrics/BlockLength
-    it 'Updates games_played variable when the game ends' do
-      none_games = mock_game.display_scores[0]
-      mock_game.update_scores
-      expect(mock_game.display_scores[0]).to eql(none_games + 1)
-    end
-
     it 'Updates games_won variable of P1 when a game is won by P1' do
       initial_games = player1.games_won
       mock_game.update_scores(player1)
@@ -214,9 +306,6 @@ end
 
 RSpec.describe Player do
   player3 = mock_game.create_player('Player3')
-  it 'Should created a new instance of a Player' do
-    expect(player3).to be_kind_of(Player)
-  end
 
   it 'Should initialize its instances with an accessible name variable' do
     expect(player3.name).to be
