@@ -32,6 +32,53 @@ player1 = mock_game.create_player('Player1')
 player2 = mock_game.create_player('Player2')
 
 RSpec.describe Game do
+  describe 'turn_incrementor' do
+    it 'Should increment the instance variable turn_counter by one' do
+      initial_count = mock_game.turn_counter
+      mock_game.turn_incrementor
+      expect(mock_game.turn_counter).to eql(initial_count + 1)
+    end
+
+    it 'Shouldn\'t keep the same value that the instance variable turn_counter had before the method was called' do
+      initial_count = mock_game.turn_counter
+      mock_game.turn_incrementor
+      expect(mock_game.turn_counter).not_to be(initial_count)
+    end
+  end
+
+  describe 'game_loop_on?' do
+    it 'Should return true if the instance turn_counter is less or equal to the instance variable turns' do
+      expect(mock_game.game_loop_on?).to eql(true)
+    end
+
+    it 'Should return false if the instance turn_counter is larger the instance variable turns' do
+      9.times { mock_game.turn_incrementor }
+      expect(mock_game.game_loop_on?).to eql(false)
+    end
+  end
+
+  describe 'restart_game?' do
+    it 'Should return true if its given parameter is the string "yes"' do
+      expect(mock_game.restart_game?('yes')).to eql(true)
+    end
+
+    it 'Should return false if its given parameter is the string "no"' do
+      expect(mock_game.restart_game?('no')).to eql(false)
+    end
+
+    it 'Should raise an Argument error if no parameter is given' do
+      expect { mock_game.restart_game? }.to raise_error(ArgumentError)
+    end
+
+    it 'Should return nil if a parameter other than the strings "yes" or "no" is given' do
+      expect(mock_game.restart_game?(true)).to be(nil)
+    end
+
+    it 'Should raise an Argument error if more than one parameter is given' do
+      expect { mock_game.restart_game?('true', 'yes') }.to raise_error(ArgumentError)
+    end
+  end
+
   describe 'winner' do
     context 'For games in which the player wins in a row' do
       it 'Player 2 wins in the first row' do
@@ -162,11 +209,6 @@ RSpec.describe Game do
       mock_game.update_scores
       expect(mock_game.display_scores[1, 2]).to eql(none_games)
     end
-  end
-
-  it 'Should set the turn_counter instance variable to 1' do
-    mock_game.turn_reseter
-    expect(mock_game.turn_counter).to eql(1)
   end
 end
 

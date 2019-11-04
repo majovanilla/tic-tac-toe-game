@@ -85,7 +85,7 @@ puts "Here's your Tic-tac-toe game board!\n\n"
 sleep 0.5
 puts board.display_board
 
-while tic_tac.game_loop_on
+while tic_tac.game_loop_on?
   current_player = tic_tac.current_player(tic_tac.turn_counter)
   sleep 0.5
   current_choice = get_player_choice(current_player)
