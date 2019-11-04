@@ -163,6 +163,10 @@ RSpec.describe Game do
       expect(mock_game.winner('FAGVA', player1_num)).to be(nil)
     end
 
+    it 'Should raise a type error if the first parameter is not a string' do
+      expect { mock_game.winner(545_345, player1_num) }.to raise_error(TypeError)
+    end
+
     it 'Should return nil if the first parameter is a string with less than 9 characters' do
       expect(mock_game.winner('FAGVA', player1_num)).to be(nil)
     end
@@ -171,9 +175,7 @@ RSpec.describe Game do
       expect(mock_game.winner('FAGVGAHJAAJA', player1_num)).to be('TIE')
     end
 
-    it 'Should raise a type error if the first parameter is not a string' do
-      expect { mock_game.winner(545_345, player1_num) }.to raise_error(TypeError)
-    end
+
 
     context 'For games in which the player wins in a row' do
       it 'Player 2 wins in the first row' do
@@ -445,12 +447,33 @@ RSpec.describe Board do
       expect(mock_board.update_board(:a1, player2)).to eql(a1: :X, a2: :O, a3: :O, b1: :O, b2: :O,
                                                            b3: :O, c1: :O, c2: :O, c3: :O)
     end
+
+    it 'should raise an ArgumentError when no input is given' do
+      expect { mock_board.update_board }.to raise_error(ArgumentError)
+    end
+
+    it 'Should raise an ArgumentError if the wrong number of parameters are given' do
+      expect { mock_board.update_board(:a2) }.to raise_error(ArgumentError)
+    end
+
+    it 'Should raise an NoMethod error if the second parameter is not an instance of Player' do
+      expect { mock_board.update_board(:a1, 'player2') }.to raise_error(NoMethodError)
+    end
   end
 
   describe 'board_reseter' do
+    it 'Should not return the board with the changes in values mabe by previous calling update_board' do
+      previous_board = { a1: :X, a2: :O, a3: :O, b1: :O, b2: :O, b3: :O, c1: :O, c2: :O, c3: :O }
+      expect(mock_board.board_reseter).not_to eql(previous_board)
+    end
+
     it 'Should reset the Board instance variable to its original value, with empty cells' do
       empty_board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
       expect(mock_board.board_reseter).to eql(empty_board)
+    end
+
+    it 'Should return a hash' do
+      expect(mock_board.board_reseter).to be_kind_of(Hash)
     end
   end
 end
