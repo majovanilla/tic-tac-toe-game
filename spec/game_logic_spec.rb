@@ -75,7 +75,7 @@ RSpec.describe Game do
       expect(mock_game.create_player(nil)).to be_kind_of(Player)
     end
   end
-  
+
   describe 'display_scores' do
     it 'should give an array' do
       expect(mock_game.display_scores).to be_kind_of(Array)
@@ -143,7 +143,6 @@ RSpec.describe Game do
   end
 
   describe 'winner' do
-
     it 'should raise an error when no input is given' do
       expect { mock_game.winner }.to raise_error(ArgumentError)
     end
@@ -298,25 +297,25 @@ RSpec.describe Game do
         mock_game.update_scores(player1)
         expect(player1.games_won).to eql(initial_games + 1)
       end
-  
+
       it 'Updates games_won variable of P2 when a game is won by P2' do
         initial_games = player2.games_won
         mock_game.update_scores(player2)
         expect(player2.games_won).to eql(initial_games + 1)
       end
-  
+
       it 'Does not update games_won variable of P2 when a game is won by P1' do
         initial_games = player2.games_won
         mock_game.update_scores(player1)
         expect(player2.games_won).to eql(initial_games)
       end
-  
+
       it 'Does not update games_won variable of P1 when a game is won by P2' do
         initial_games = player1.games_won
         mock_game.update_scores(player2)
         expect(player1.games_won).to eql(initial_games)
       end
-  
+
       it 'The variable games_won does not update (for neither player) when a game is a tie' do
         none_games = mock_game.display_scores[1, 2]
         mock_game.update_scores
@@ -380,17 +379,31 @@ RSpec.describe Board do
     end
 
     it 'Should return a specific string' do
-      expect(mock_board.display_board).to be("    1  2  3\n a [#{@board[:a1]}][#{@board[:a2]}][#{@board[:a3]}]
-      b [#{@board[:b1]}][#{@board[:b2]}][#{@board[:b3]}]
-      c [#{@board[:c1]}][#{@board[:c2]}][#{@board[:c3]}]\n\n")
+      board = "    1  2  3\n a [\s][\s][\s]
+ b [\s][\s][\s]
+ c [\s][\s][\s]\n\n"
+      expect(mock_board.display_board).to eql(board)
     end
   end
 
-  describe 'display_board' do
+  describe 'board_values' do
+    it 'Should return a string' do
+      expect(mock_board.board_values).to be_kind_of(String)
+    end
+
+    it 'Should return a string with the values of the hash board' do
+      expect(mock_board.board_values).to eql("\s\s\s\s\s\s\s\s\s")
+    end
+
+    it 'Should return a string with the updated values of the hash board' do
+      mock_board.update_board(:a2, player1)
+      mock_board.update_board(:b3, player1)
+      expect(mock_board.board_values).to eql("\sO\s\s\sO\s\s\s")
+    end
   end
 
   describe 'choice_checker' do
-    it 'Should return the string \'ÍNVALID CHOICE\' if the input is not a valid cell in the board' do
+    it 'Should return the string \'INVALID CHOICE\' if the input is not a valid cell in the board' do
       input = :a5
       expect(mock_board.choice_checker(input)).to eql('INVALID CHOICE')
     end
@@ -401,10 +414,7 @@ RSpec.describe Board do
       expect(mock_board.choice_checker(input)).to eql('INVALID CELL')
     end
 
-    it 'Should return the string \'INVALID CELL\' if the input is points to a taken cell in the board' do
-      mock_board.update_board(:b1, player1)
-      mock_board.update_board(:a2, player1)
-      mock_board.update_board(:b3, player1)
+    it 'Should return true if the input is a valid choice and the cell is empty' do
       mock_board.update_board(:a3, player1)
       mock_board.update_board(:c1, player1)
       mock_board.update_board(:c2, player1)
@@ -412,9 +422,31 @@ RSpec.describe Board do
       input = :a1
       expect(mock_board.choice_checker(input)).to eql(true)
     end
+
+    it 'Should raise a type error if the parameter is not a Symbol' do
+      expect { mock_game.choice_checker('1') }.to raise_error(NoMethodError)
+    end
+
+    it 'should raise an Argument error when no input is given' do
+      expect { mock_game.choice_checker }.to raise_error(NoMethodError)
+    end
+
+    it 'Should raise an Argument error if more than one parameter is given' do
+      expect { mock_game.choice_checker(1, 2) }.to raise_error(NoMethodError)
+    end
   end
+
   describe 'update_board' do
+    it 'Should return a hash' do
+      expect(mock_board.update_board(:b1, player1)).to be_kind_of(Hash)
+    end
+
+    it 'Should return a hash with the updated board values' do
+      expect(mock_board.update_board(:a1, player2)).to eql(a1: :X, a2: :O, a3: :O, b1: :O, b2: :O,
+                                                           b3: :O, c1: :O, c2: :O, c3: :O)
+    end
   end
+
   describe 'board_reseter' do
     it 'Should reset the Board instance variable to its original value, with empty cells' do
       empty_board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
