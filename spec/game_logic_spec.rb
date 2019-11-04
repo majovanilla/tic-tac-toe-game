@@ -3,7 +3,7 @@
 # frozen_string_literal: true
 
 require './lib/game_logic.rb'
-let(:vals_row1_winner_x) { "XXX\sOO\sO\s" }
+vals_row1_winner_x = "XXX\sOO\sO\s"
 vals_row2_winner_x = "OO\sXXX\s\sO"
 vals_row3_winner_x = "O\sOO\s\sXXX"
 vals_row1_winner_o = "OOO\s\sX\s\sX"
@@ -269,55 +269,127 @@ RSpec.describe Game do
     it 'Returns the player object of P2 if counter is even' do
       expect(mock_game.current_player(even)).to equal(player2)
     end
+
+    it 'Should raise a type error if the parameter is not a Number' do
+      expect { mock_game.current_player('1') }.to raise_error(NoMethodError)
+    end
+
+    it 'should raise an Argument error when no input is given' do
+      expect { mock_game.current_player }.to raise_error(ArgumentError)
+    end
+
+    it 'Should raise an Argument error if more than one parameter is given' do
+      expect { mock_game.current_player(1, 2) }.to raise_error(ArgumentError)
+    end
   end
 
-  context 'Of when a game ends and the scores are updated' do # rubocop:disable Metrics/BlockLength
-    it 'Updates games_won variable of P1 when a game is won by P1' do
-      initial_games = player1.games_won
-      mock_game.update_scores(player1)
-      expect(player1.games_won).to eql(initial_games + 1)
+  describe 'update_scores' do
+    it 'Should raise an Argument error if more than one parameter is given' do
+      expect { mock_game.update_scores(1, 2) }.to raise_error(ArgumentError)
     end
 
-    it 'Updates games_won variable of P2 when a game is won by P2' do
-      initial_games = player2.games_won
-      mock_game.update_scores(player2)
-      expect(player2.games_won).to eql(initial_games + 1)
+    it 'Should raise an NoTypeMethod error if the parameter is not an instance of Player' do
+      expect { mock_game.update_scores([]) }.to raise_error(NoMethodError)
     end
 
-    it 'Does not update games_won variable of P2 when a game is won by P1' do
-      initial_games = player2.games_won
-      mock_game.update_scores(player1)
-      expect(player2.games_won).to eql(initial_games)
-    end
-
-    it 'Does not update games_won variable of P1 when a game is won by P2' do
-      initial_games = player1.games_won
-      mock_game.update_scores(player2)
-      expect(player1.games_won).to eql(initial_games)
-    end
-
-    it 'The variable games_won does not update (for neither player) when a game is a tie' do
-      none_games = mock_game.display_scores[1, 2]
-      mock_game.update_scores
-      expect(mock_game.display_scores[1, 2]).to eql(none_games)
+    context 'Of when a game ends and the scores are updated' do
+      it 'Updates games_won variable of P1 when a game is won by P1' do
+        initial_games = player1.games_won
+        mock_game.update_scores(player1)
+        expect(player1.games_won).to eql(initial_games + 1)
+      end
+  
+      it 'Updates games_won variable of P2 when a game is won by P2' do
+        initial_games = player2.games_won
+        mock_game.update_scores(player2)
+        expect(player2.games_won).to eql(initial_games + 1)
+      end
+  
+      it 'Does not update games_won variable of P2 when a game is won by P1' do
+        initial_games = player2.games_won
+        mock_game.update_scores(player1)
+        expect(player2.games_won).to eql(initial_games)
+      end
+  
+      it 'Does not update games_won variable of P1 when a game is won by P2' do
+        initial_games = player1.games_won
+        mock_game.update_scores(player2)
+        expect(player1.games_won).to eql(initial_games)
+      end
+  
+      it 'The variable games_won does not update (for neither player) when a game is a tie' do
+        none_games = mock_game.display_scores[1, 2]
+        mock_game.update_scores
+        expect(mock_game.display_scores[1, 2]).to eql(none_games)
+      end
     end
   end
 end
 
 RSpec.describe Player do
-  player3 = mock_game.create_player('Player3')
+  describe 'player_char' do
+    it 'Should return a symbol' do
+      expect(player1.player_char).to be_kind_of(Symbol)
+    end
 
-  it 'Should initialize its instances with an accessible name variable' do
-    expect(player3.name).to be
+    it 'Should return alternate between the symbols :X and :O with each instance of a Player' do
+      player_characters = [player1.player_char, player2.player_char]
+      expect(player_characters).to eql(%i[O X])
+    end
+
+    it 'Should return the :O symbol when the first Player is instantiated,
+    meaning the class variable player_number is odd' do
+      expect(player1.player_char).to eql(:O)
+    end
+
+    it 'Should return the :X symbol when the second Player is instantiated,
+    meaning the class variable player_number is even' do
+      expect(player2.player_char).to eql(:X)
+    end
   end
 
-  it 'Should initialize its instances with an accessible games_won variable' do
-    expect(player3.games_won).to be
+  describe 'player_win' do
+    it 'Should increment the games_won instance variable by one when called' do
+      initial_games_won = player1.games_won
+      player1.player_win
+      expect(player1.games_won).to eql(initial_games_won + 1)
+    end
+
+    it 'Should not let the games_won instance variable stay the same when called' do
+      initial_games_won = player1.games_won
+      player1.player_win
+      expect(player1.games_won).not_to eql(initial_games_won)
+    end
+  end
+
+  describe 'initialize' do
+    it 'Should initialize its instances with an accessible name variable' do
+      expect(player1.name).to be
+    end
+
+    it 'Should initialize its instances with an accessible games_won variable' do
+      expect(player1.games_won).to be
+    end
   end
 end
 
 RSpec.describe Board do
-  context 'For the choice checker return values' do
+  describe 'display_board' do
+    it 'Should return a string' do
+      expect(mock_board.display_board).to be_kind_of(String)
+    end
+
+    it 'Should return a specific string' do
+      expect(mock_board.display_board).to be("    1  2  3\n a [#{@board[:a1]}][#{@board[:a2]}][#{@board[:a3]}]
+      b [#{@board[:b1]}][#{@board[:b2]}][#{@board[:b3]}]
+      c [#{@board[:c1]}][#{@board[:c2]}][#{@board[:c3]}]\n\n")
+    end
+  end
+
+  describe 'display_board' do
+  end
+
+  describe 'choice_checker' do
     it 'Should return the string \'ÍNVALID CHOICE\' if the input is not a valid cell in the board' do
       input = :a5
       expect(mock_board.choice_checker(input)).to eql('INVALID CHOICE')
@@ -340,7 +412,10 @@ RSpec.describe Board do
       input = :a1
       expect(mock_board.choice_checker(input)).to eql(true)
     end
-
+  end
+  describe 'update_board' do
+  end
+  describe 'board_reseter' do
     it 'Should reset the Board instance variable to its original value, with empty cells' do
       empty_board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
       expect(mock_board.board_reseter).to eql(empty_board)
