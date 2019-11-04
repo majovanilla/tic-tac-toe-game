@@ -3,7 +3,7 @@
 # frozen_string_literal: true
 
 require './lib/game_logic.rb'
-vals_row1_winner_x = "XXX\sOO\sO\s"
+let(:vals_row1_winner_x) { "XXX\sOO\sO\s" }
 vals_row2_winner_x = "OO\sXXX\s\sO"
 vals_row3_winner_x = "O\sOO\s\sXXX"
 vals_row1_winner_o = "OOO\s\sX\s\sX"
