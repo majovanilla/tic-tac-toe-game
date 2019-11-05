@@ -15,11 +15,7 @@ class Game
     @turn_counter += 1
   end
 
-  def turn_reseter
-    @turn_counter = 1
-  end
-
-  def game_loop_on
+  def game_loop_on?
     @turn_counter <= @turns
   end
 
@@ -46,11 +42,6 @@ class Game
     false
   end
 
-  def update_scores(player = nil)
-    @games_played += 1
-    player&.player_win
-  end
-
   def display_scores
     [@games_played, @players[0].games_won, @players[1].games_won]
   end
@@ -63,8 +54,28 @@ class Game
       update_scores(@players[player_number])
       @players[player_number].name
     elsif check_tie(vals) && !@win
+      update_scores
       'TIE'
     end
+  end
+
+  def current_player(counter)
+    if counter.odd?
+      @players[0]
+    else
+      @players[1]
+    end
+  end
+
+  def update_scores(player = nil)
+    @games_played += 1
+    player&.player_win
+  end
+
+  private
+
+  def turn_reseter
+    @turn_counter = 1
   end
 
   def row_winner(values, choice)
@@ -87,14 +98,6 @@ class Game
 
   def check_tie(vals)
     return true if vals.match(/\w{9}/)
-  end
-
-  def current_player(counter)
-    if counter.odd?
-      @players[0]
-    else
-      @players[1]
-    end
   end
 
   def valid_name?(input)
@@ -127,16 +130,6 @@ class Board
     return true if choice_valid?(input) && cell_empty?(input)
   end
 
-  def choice_valid?(input)
-    !@board[input].nil?
-  end
-
-  def cell_empty?(input)
-    return false if @board[input].match(/[OX]/)
-
-    true
-  end
-
   def update_board(input, player)
     @board[input] = player.player_char
     @board
@@ -145,30 +138,8 @@ class Board
   def board_reseter
     @board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
   end
-end
 
-class Board
-  def initialize
-    @board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
-  end
-
-  def display_board
-    "    1  2  3\n a [#{@board[:a1]}][#{@board[:a2]}][#{@board[:a3]}]
- b [#{@board[:b1]}][#{@board[:b2]}][#{@board[:b3]}]
- c [#{@board[:c1]}][#{@board[:c2]}][#{@board[:c3]}]\n\n"
-  end
-
-  def board_values
-    @board.values.join
-  end
-
-  def choice_checker(input)
-    return 'INVALID CHOICE' unless choice_valid?(input)
-
-    return 'INVALID CELL' unless cell_empty?(input)
-
-    return true if choice_valid?(input) && cell_empty?(input)
-  end
+  private
 
   def choice_valid?(input)
     !@board[input].nil?
@@ -178,15 +149,6 @@ class Board
     return false if @board[input].match(/[OX]/)
 
     true
-  end
-
-  def update_board(input, player)
-    @board[input] = player.player_char
-    @board
-  end
-
-  def board_reseter
-    @board = { a1: "\s", a2: "\s", a3: "\s", b1: "\s", b2: "\s", b3: "\s", c1: "\s", c2: "\s", c3: "\s" }
   end
 end
 

@@ -85,7 +85,7 @@ puts "Here's your Tic-tac-toe game board!\n\n"
 sleep 0.5
 puts board.display_board
 
-while tic_tac.game_loop_on
+while tic_tac.game_loop_on?
   current_player = tic_tac.current_player(tic_tac.turn_counter)
   sleep 0.5
   current_choice = get_player_choice(current_player)
@@ -107,9 +107,8 @@ while tic_tac.game_loop_on
 
   sleep 0.5
   result_final = "#{tic_tac.winner(values, 0)}#{tic_tac.winner(values, 1)}"
-  
+
   if result_final == 'TIETIE'
-    tic_tac.update_scores
     puts "\n\n------------------------\n\n\s\s\s\s\s\sTHAT'S A TIE!\n\n------------------------\n\n" 
   elsif !turn_result(result_final)
     next

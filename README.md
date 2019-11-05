@@ -30,6 +30,7 @@
   * [Installation](#installation)
   * [Instructions](#instructions)
   * [Built With](#built-with)
+  * [Testing](#testing)
 * [Contact](#contact)
 * [Acknowledgements](#acknowledgements)
 
@@ -114,6 +115,12 @@ This project was built using these technologies.
 * Ruby 
 * VsCode
 * Rubocop and Stickler for linting
+
+### Testing
+This project contains tests made with RSpec, testing the critical methods inside the game_logic file.
+The tests are contained within the spec folder in the game_logic_spec.rb file
+Before running the tests make sure to install [RSpec](rspec.info)
+You can run the tests by typing ```rspec``` in the terminal, inside the root directory.
 
 <!-- CONTACT -->
 ## Contact
